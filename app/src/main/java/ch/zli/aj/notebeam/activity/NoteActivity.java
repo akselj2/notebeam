@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.gson.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.Timestamp;
 
 import ch.zli.aj.notebeam.R;
@@ -56,7 +58,19 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
-    public void saveNotePersistently(Note note) {
+    public void saveNotePersistently(Note note, String filePath) {
+        String json = noteToJson(note);
 
+        try (FileWriter fileWriter = new FileWriter(filePath, true)) {
+            fileWriter.write(json);
+            fileWriter.write(System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String noteToJson(Note note) {
+        Gson gson = new Gson();
+        return gson.toJson(note);
     }
 }
