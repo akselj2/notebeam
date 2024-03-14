@@ -7,9 +7,9 @@ public class Note {
     public String title;
     public String author;
     public String content;
-    public Timestamp timestamp;
+    public long timestamp;
 
-    public Note(String title, String author, String content, Timestamp timestamp) {
+    public Note(String title, String author, String content, long timestamp) {
         this.title = title;
         this.author = author;
         this.content = content;
