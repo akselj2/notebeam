@@ -1,5 +1,6 @@
 package ch.zli.aj.notebeam.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import com.google.gson.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.Timestamp;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
@@ -23,7 +23,10 @@ public class NoteActivity extends AppCompatActivity {
 
     public Button delete, save, share;
 
+    public String filename = "notes.json";
+
     public EditText title, author, content;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -47,7 +50,7 @@ public class NoteActivity extends AppCompatActivity {
 
        Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
 
-       saveNotePersistently(note);
+       saveNotePersistently(note, filename);
     }
 
     public void delete(View view) {
@@ -60,13 +63,6 @@ public class NoteActivity extends AppCompatActivity {
 
     public void saveNotePersistently(Note note, String filePath) {
         String json = noteToJson(note);
-
-        try (FileWriter fileWriter = new FileWriter(filePath, true)) {
-            fileWriter.write(json);
-            fileWriter.write(System.lineSeparator());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     
     public static String noteToJson(Note note) {

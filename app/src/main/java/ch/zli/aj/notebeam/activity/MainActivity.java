@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onScanButtonClick(View view) {
-
+        Intent scanIntent = new Intent(MainActivity.this, QRActivity.class);
+        startActivity(scanIntent);
     }
 
     public void onCreateButtonClick(View view) {
