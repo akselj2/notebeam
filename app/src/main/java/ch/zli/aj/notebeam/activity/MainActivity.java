@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
             bufferedReader.close();
 
             String response = stringBuilder.toString();
-            return response;
-        } catch (IOException e) {
+            JsonToNote(response);
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
         return "file nto found idk";

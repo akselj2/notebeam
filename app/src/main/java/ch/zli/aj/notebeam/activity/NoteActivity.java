@@ -11,13 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.google.gson.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Struct;
@@ -74,17 +78,38 @@ public class NoteActivity extends AppCompatActivity {
 
     public void saveNotePersistently(Note note) {
         String json = noteToJson(note);
+        File file = new File(this.getFilesDir(), FILE_NAME);
+
+        JSONArray notesArray = new JSONArray();
+
+        if (file.exists()) {
+            StringBuilder jsonContent = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+                notesArray = new JSONArray(jsonContent.toString());
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
-            File file = new File(this.getFilesDir(), FILE_NAME);
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(json);
-            bufferedWriter.close();
+            notesArray.put(new JSONObject(noteToJson(note)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+            bufferedWriter.write(notesArray.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
-    
+
     public static String noteToJson(Note note) {
         JSONObject jsonObject = new JSONObject();
 
