@@ -13,13 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import ch.zli.aj.notebeam.R;
+import ch.zli.aj.notebeam.model.Note;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,6 +89,15 @@ public class MainActivity extends AppCompatActivity {
         return "file nto found idk";
     }
 
+    public Note JsonToNote (String response) throws JSONException {
+        JSONObject jsonObject = new JSONObject(response);
 
+        return new Note(
+                jsonObject.get("title").toString(),
+                jsonObject.get("author").toString(),
+                jsonObject.get("content").toString(),
+                Timestamp.valueOf(jsonObject.get("timestamp").toString())
+        );
+    }
 
 }

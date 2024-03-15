@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Struct;
+import java.sql.Timestamp;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
@@ -56,7 +57,7 @@ public class NoteActivity extends AppCompatActivity {
         String noteTitle = String.valueOf(title.getText());
         String noteAuthor = String.valueOf(author.getText());
         String noteContent = String.valueOf(content.getText());
-        long timestamp = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
 
