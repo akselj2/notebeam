@@ -2,9 +2,12 @@ package ch.zli.aj.notebeam.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         JSONObject jsonObject = new JSONObject(response);
 
         return new Note(
+                UUID.fromString(jsonObject.get("id").toString()),
                 jsonObject.get("title").toString(),
                 jsonObject.get("author").toString(),
                 jsonObject.get("content").toString(),

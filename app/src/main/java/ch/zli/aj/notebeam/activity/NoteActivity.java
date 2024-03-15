@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Struct;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
@@ -53,17 +54,22 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    public static UUID generateId() {
+        return UUID.randomUUID();
+    }
+
     public void save(View view) {
         title = findViewById(R.id.note_title);
         author = findViewById(R.id.note_author);
         content = findViewById(R.id.note_content);
 
+        UUID id = generateId();
         String noteTitle = String.valueOf(title.getText());
         String noteAuthor = String.valueOf(author.getText());
         String noteContent = String.valueOf(content.getText());
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
+        Note note = new Note(id, noteTitle, noteAuthor, noteContent, timestamp);
 
         saveNotePersistently(note);
     }
@@ -77,7 +83,6 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void saveNotePersistently(Note note) {
-        String json = noteToJson(note);
         File file = new File(this.getFilesDir(), FILE_NAME);
 
         JSONArray notesArray = new JSONArray();
@@ -114,6 +119,7 @@ public class NoteActivity extends AppCompatActivity {
         JSONObject jsonObject = new JSONObject();
 
         try {
+            jsonObject.put("id", note.id);
             jsonObject.put("title", note.title);
             jsonObject.put("author", note.author);
             jsonObject.put("content", note.content);
@@ -124,6 +130,6 @@ public class NoteActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        return "Json could not be created.";
+        return "";
     }
 }
