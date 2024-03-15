@@ -35,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:onClick="onScanButtonClick"
         app:layout_constraintBottom_toTopOf="@+id/menuButton"
         app:layout_constraintEnd_toEndOf="@+id/menuButton"
         app:srcCompat="@android:drawable/ic_menu_camera" />

@@ -13,8 +13,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.gson.*;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Struct;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
@@ -23,7 +29,7 @@ public class NoteActivity extends AppCompatActivity {
 
     public Button delete, save, share;
 
-    public String filename = "notes.json";
+    public static final String FILE_NAME = "notes.json";
 
     public EditText title, author, content;
 
@@ -50,7 +56,7 @@ public class NoteActivity extends AppCompatActivity {
 
        Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
 
-       saveNotePersistently(note, filename);
+       saveNotePersistently(note);
     }
 
     public void delete(View view) {
@@ -61,12 +67,33 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
-    public void saveNotePersistently(Note note, String filePath) {
+    public void saveNotePersistently(Note note) {
         String json = noteToJson(note);
+        try {
+            File file = new File(this.getFilesDir(), FILE_NAME);
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(json);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public static String noteToJson(Note note) {
-        Gson gson = new Gson();
-        return gson.toJson(note);
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("title", note.title);
+            jsonObject.put("author", note.author);
+            jsonObject.put("content", note.content);
+            jsonObject.put("timestamp", note.timestamp);
+
+            return jsonObject.toString();
+        } catch (JsonIOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "Json could not be created.";
     }
 }
