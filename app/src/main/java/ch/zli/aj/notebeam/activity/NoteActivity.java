@@ -49,14 +49,18 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-       String noteTitle = String.valueOf(findViewById(R.id.note_title));
-       String noteAuthor = String.valueOf(findViewById(R.id.note_author));
-       String noteContent = String.valueOf(findViewById(R.id.note_content));
-       long timestamp = System.currentTimeMillis();
+        title = findViewById(R.id.note_title);
+        author = findViewById(R.id.note_author);
+        content = findViewById(R.id.note_content);
 
-       Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
+        String noteTitle = String.valueOf(title.getText());
+        String noteAuthor = String.valueOf(author.getText());
+        String noteContent = String.valueOf(content.getText());
+        long timestamp = System.currentTimeMillis();
 
-       saveNotePersistently(note);
+        Note note = new Note(noteTitle, noteAuthor, noteContent, timestamp);
+
+        saveNotePersistently(note);
     }
 
     public void delete(View view) {
