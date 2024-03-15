@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -12,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +27,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.sql.Array;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +38,44 @@ import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
 
 public class MainActivity extends AppCompatActivity {
+
+    private class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+
+        private List<Note> noteList;
+
+        public NoteAdapter(List<Note> noteList) {
+            this.noteList = noteList;
+        }
+
+        @Override
+        public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(android.R.layout.simple_list_item_2, parent, false);
+            return  new NoteViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(NoteViewHolder holder, int position) {
+            Note note = noteList.get(position);
+            holder.titleView.setText(note.title);
+            holder.contentView.setText(note.content);
+        }
+
+        @Override
+        public int getItemCount() {
+            return noteList.size();
+        }
+
+        private class NoteViewHolder extends RecyclerView.ViewHolder {
+            TextView titleView, contentView;
+
+            public NoteViewHolder(View itemView) {
+                super(itemView);
+                titleView = itemView.findViewById(android.R.id.text1);
+                contentView = itemView.findViewById(android.R.id.text2);
+            }
+        }
+    }
 
     public FloatingActionButton menuButton, scanButton, createButton;
     private boolean areButtonsVisible;
@@ -51,6 +95,12 @@ public class MainActivity extends AppCompatActivity {
         menuButton = findViewById(R.id.menuButton);
         scanButton = findViewById(R.id.actionButton1);
         createButton = findViewById(R.id.actionButton2);
+
+        recyclerView = findViewById(R.id.recyclerView);
+
+        List<Note> notesList = getJsonFile();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new NoteAdapter(notesList));
     }
 
     public void toggleButtons(View view) {
@@ -70,28 +120,36 @@ public class MainActivity extends AppCompatActivity {
         startActivity(createIntent);
     }
 
-    public String getJsonFile() {
-        String filename = "notes.json";
+    public List<Note> getJsonFile() {
 
-        try {
-            File file = new File(this.getFilesDir(), filename);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                stringBuilder.append(line).append("\n");
-                line = bufferedReader.readLine();
+        List<Note> noteList = new ArrayList<>();
+
+        File file = new File(getFilesDir(), "notes.json");
+
+        if(file.exists()) {
+            StringBuilder jsonContent = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+                JSONArray jsonArray = new JSONArray(jsonContent.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Note note = new Note(
+                            UUID.fromString(jsonObject.getString("id")),
+                            jsonObject.getString("title"),
+                            jsonObject.getString("author"),
+                            jsonObject.getString("content"),
+                            Timestamp.valueOf(jsonObject.getString("timestamp"))
+                    );
+                    noteList.add(note);
+                }
+            }catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
-
-            bufferedReader.close();
-
-            String response = stringBuilder.toString();
-            JsonToNote(response);
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         }
-        return "file nto found idk";
+        return noteList;
     }
 
     public Note JsonToNote (String response) throws JSONException {

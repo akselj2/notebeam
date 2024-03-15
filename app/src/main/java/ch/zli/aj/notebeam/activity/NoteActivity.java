@@ -12,8 +12,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.gson.*;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -126,7 +124,7 @@ public class NoteActivity extends AppCompatActivity {
             jsonObject.put("timestamp", note.timestamp);
 
             return jsonObject.toString();
-        } catch (JsonIOException | JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
