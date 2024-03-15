@@ -152,16 +152,4 @@ public class MainActivity extends AppCompatActivity {
         return noteList;
     }
 
-    public Note JsonToNote (String response) throws JSONException {
-        JSONObject jsonObject = new JSONObject(response);
-
-        return new Note(
-                UUID.fromString(jsonObject.get("id").toString()),
-                jsonObject.get("title").toString(),
-                jsonObject.get("author").toString(),
-                jsonObject.get("content").toString(),
-                Timestamp.valueOf(jsonObject.get("timestamp").toString())
-        );
-    }
-
 }
