@@ -13,6 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import ch.zli.aj.notebeam.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,4 +59,31 @@ public class MainActivity extends AppCompatActivity {
         Intent createIntent = new Intent(MainActivity.this, NoteActivity.class);
         startActivity(createIntent);
     }
+
+    public String getJsonFile() {
+        String filename = "notes.json";
+
+        try {
+            File file = new File(this.getFilesDir(), filename);
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append("\n");
+                line = bufferedReader.readLine();
+            }
+
+            bufferedReader.close();
+
+            String response = stringBuilder.toString();
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "file nto found idk";
+    }
+
+
+
 }
