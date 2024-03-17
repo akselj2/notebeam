@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
         public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(android.R.layout.simple_list_item_2, parent, false);
+
             return  new NoteViewHolder(itemView);
         }
 
@@ -76,6 +77,13 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
         @Override
         public void onNoteClick(Note note) {
 
+            Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+            intent.putExtra("id", note.id);
+            intent.putExtra("title", note.title);
+            intent.putExtra("author", note.author);
+            intent.putExtra("content", note.content);
+            intent.putExtra("timestamp", note.timestamp);
+            startActivity(intent);
         }
 
         private class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -85,6 +93,16 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
                 super(itemView);
                 titleView = itemView.findViewById(android.R.id.text1);
                 contentView = itemView.findViewById(android.R.id.text2);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION && onNoteListener != null) {
+                            onNoteListener.onNoteClick(noteList.get(position));
+                        }
+                    }
+                });
             }
         }
     }
@@ -166,13 +184,13 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
 
     @Override
     public void onNoteClick(Note note) {
-        Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+        /*Intent intent = new Intent(MainActivity.this, NoteActivity.class);
         intent.putExtra("id", note.id);
         intent.putExtra("title", note.title);
         intent.putExtra("author", note.author);
         intent.putExtra("content", note.content);
         intent.putExtra("timestamp", note.timestamp);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
 }
