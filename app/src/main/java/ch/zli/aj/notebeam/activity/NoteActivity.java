@@ -50,6 +50,8 @@ public class NoteActivity extends AppCompatActivity {
         save = findViewById(R.id.save);
         share = findViewById(R.id.share);
 
+
+
     }
 
     public static UUID generateId() {

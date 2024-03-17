@@ -34,17 +34,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ch.zli.aj.notebeam.OnNoteListener;
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnNoteListener {
 
-    private class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+    private class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> implements OnNoteListener {
+
+        private OnNoteListener onNoteListener;
 
         private List<Note> noteList;
 
-        public NoteAdapter(List<Note> noteList) {
+        public NoteAdapter(List<Note> noteList, OnNoteListener onNoteListener) {
             this.noteList = noteList;
+            this.onNoteListener = onNoteListener;
         }
 
         @Override
@@ -57,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(NoteViewHolder holder, int position) {
             Note note = noteList.get(position);
+            holder.itemView.setOnClickListener(view -> {
+                onNoteClick(note);
+            });
             holder.titleView.setText(note.title);
             holder.contentView.setText(note.content);
         }
@@ -64,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return noteList.size();
+        }
+
+        @Override
+        public void onNoteClick(Note note) {
+
         }
 
         private class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -100,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Note> notesList = getJsonFile();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new NoteAdapter(notesList));
+        recyclerView.setAdapter(new NoteAdapter(notesList, this));
     }
 
     public void toggleButtons(View view) {
@@ -150,6 +162,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return noteList;
+    }
+
+    @Override
+    public void onNoteClick(Note note) {
+        Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+        intent.putExtra("id", note.id);
+        intent.putExtra("title", note.title);
+        intent.putExtra("author", note.author);
+        intent.putExtra("content", note.content);
+        intent.putExtra("timestamp", note.timestamp);
+        startActivity(intent);
     }
 
 }
