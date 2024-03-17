@@ -38,6 +38,8 @@ public class NoteActivity extends AppCompatActivity {
 
     public EditText title, author, content;
 
+    public UUID noteId = null;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -56,10 +58,15 @@ public class NoteActivity extends AppCompatActivity {
         content = findViewById(R.id.note_content);
 
         Intent intent = getIntent();
-        if (intent != null) {
-            title.setText(intent.getStringExtra("title"));
-            author.setText(intent.getStringExtra("author"));
-            content.setText(intent.getStringExtra("content"));
+        if (intent != null && intent.hasExtra("id")) {
+            String idString = intent.getStringExtra("id");
+            if (idString != null && !idString.isEmpty()) {
+                noteId = UUID.fromString(idString);
+                // Now, load the rest of the note details for editing
+                title.setText(intent.getStringExtra("title"));
+                author.setText(intent.getStringExtra("author"));
+                content.setText(intent.getStringExtra("content"));
+            }
         }
 
 
@@ -70,17 +77,16 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-        title = findViewById(R.id.note_title);
-        author = findViewById(R.id.note_author);
-        content = findViewById(R.id.note_content);
-
-        UUID id = generateId();
-        String noteTitle = String.valueOf(title.getText());
-        String noteAuthor = String.valueOf(author.getText());
-        String noteContent = String.valueOf(content.getText());
+        String noteTitle = title.getText().toString();
+        String noteAuthor = author.getText().toString();
+        String noteContent = content.getText().toString();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        Note note = new Note(id, noteTitle, noteAuthor, noteContent, timestamp);
+        if (noteId == null) {
+            noteId = generateId(); // Generate a new ID for new notes
+        }
+
+        Note note = new Note(noteId, noteTitle, noteAuthor, noteContent, timestamp);
 
         saveNotePersistently(note);
     }
@@ -98,6 +104,7 @@ public class NoteActivity extends AppCompatActivity {
 
         JSONArray notesArray = new JSONArray();
 
+        //reads existing file
         if (file.exists()) {
             StringBuilder jsonContent = new StringBuilder();
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -111,10 +118,31 @@ public class NoteActivity extends AppCompatActivity {
             }
         }
 
-        try {
-            notesArray.put(new JSONObject(noteToJson(note)));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        boolean noteUpdated = false;
+        for (int i = 0; i < notesArray.length(); i++) {
+            try {
+                JSONObject existingNotes = notesArray.getJSONObject(i);
+                if (existingNotes.getString("id").equals(note.id.toString())) {
+                    existingNotes.put("title", note.title);
+                    existingNotes.put("author", note.author);
+                    existingNotes.put("content", note.content);
+                    existingNotes.put("timestamp", note.timestamp);
+                    notesArray.put(i, existingNotes);
+                    noteUpdated = true;
+                    break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //if not updating
+        if (!noteUpdated) {
+            try {
+                notesArray.put(new JSONObject(noteToJson(note)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {

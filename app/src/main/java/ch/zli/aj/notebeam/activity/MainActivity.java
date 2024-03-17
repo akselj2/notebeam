@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
         public void onNoteClick(Note note) {
 
             Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-            intent.putExtra("id", note.id);
+            intent.putExtra("id", note.id.toString());
             intent.putExtra("title", note.title);
             intent.putExtra("author", note.author);
             intent.putExtra("content", note.content);
