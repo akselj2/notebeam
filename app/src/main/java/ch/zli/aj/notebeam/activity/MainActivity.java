@@ -126,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
         scanButton = findViewById(R.id.actionButton1);
         createButton = findViewById(R.id.actionButton2);
 
+        populateView();
+    }
+
+    public void populateView() {
+
         recyclerView = findViewById(R.id.recyclerView);
 
         List<Note> notesList = getJsonFile();
@@ -151,9 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
     }
 
     public List<Note> getJsonFile() {
-
         List<Note> noteList = new ArrayList<>();
-
         File file = new File(getFilesDir(), "notes.json");
 
         if(file.exists()) {
@@ -180,6 +183,12 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
             }
         }
         return noteList;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateView();
     }
 
     @Override

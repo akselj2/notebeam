@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
+import kotlinx.coroutines.JobKt;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -93,6 +94,35 @@ public class NoteActivity extends AppCompatActivity {
 
     public void delete(View view) {
 
+        File file = new File(getFilesDir(), FILE_NAME);
+        JSONArray newNotesArray = new JSONArray();
+
+        if (file.exists()) {
+            StringBuilder jsonContent = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+                JSONArray currentNotesArray = new JSONArray(jsonContent.toString());
+
+                for (int i = 0; i < currentNotesArray.length(); i++) {
+                    JSONObject note = currentNotesArray.getJSONObject(i);
+                    if (!note.getString("id").equals(noteId.toString())) {
+                        newNotesArray.put(note);
+                    }
+                }
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, false))) {
+            bw.write(newNotesArray.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        finish();
     }
 
     public void share(View view) {
