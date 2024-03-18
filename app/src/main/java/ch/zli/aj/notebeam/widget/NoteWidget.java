@@ -29,12 +29,21 @@ import ch.zli.aj.notebeam.model.Note;
 
 /**
  * Implementation of App Widget functionality.
+ * @author Aksel Jessen
+ * @version 1.0
+ * @since 18.03.2024
  */
 public class NoteWidget extends AppWidgetProvider {
 
     public static final String ACTION_UPDATE_NOTE_WIDGET = "action.UPDATE_NOTE_WIDGET";
 
 
+    /**
+     * UI Generation method
+     * @param context Active environment
+     * @param appWidgetManager Updates AppWidget State
+     * @param appWidgetId Id of Widget
+     */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -43,7 +52,6 @@ public class NoteWidget extends AppWidgetProvider {
 
 
         Note note = getMostRecentNote(context);
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.note_widget);
         views.setTextViewText(R.id.appwidget_title, note.title);
         views.setTextViewText(R.id.appwidget_content, note.content);
@@ -51,16 +59,18 @@ public class NoteWidget extends AppWidgetProvider {
 
         views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
     }
 
+    /**
+     * Gets the most recently modified note
+     * @param context active environment
+     * @return the most recently modified note to show in the widget.
+     */
     public static Note getMostRecentNote(Context context) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         File file = new File(context.getFilesDir(), "notes.json");
-        Note mostRecentNote = null; // Now initializing this below before use
-        Date mostRecentDate = null;
+        Note mostRecentNote = null;
 
         if (file.exists()) {
             StringBuilder jsonContent = new StringBuilder();
@@ -71,27 +81,7 @@ public class NoteWidget extends AppWidgetProvider {
                 }
                 JSONArray notesArray = new JSONArray(jsonContent.toString());
 
-                for (int i = 0; i < notesArray.length(); i++) {
-                    JSONObject noteObject = notesArray.getJSONObject(i);
-                    String timestampStr = noteObject.getString("timestamp");
-                    try {
-                        Date date = dateFormat.parse(timestampStr);
-                        if (mostRecentDate == null || (date != null && date.after(mostRecentDate))) {
-                            mostRecentDate = date;
-
-                            UUID id = UUID.fromString(noteObject.getString("id"));
-                            String title = noteObject.getString("title");
-                            String author = noteObject.getString("author");
-                            String content = noteObject.getString("content");
-                            String timestamp = noteObject.getString("timestamp");
-
-                            mostRecentNote = new Note(id, title, author, content, Timestamp.valueOf(timestamp));
-                            // Instantiate mostRecentNote here with the most recent data found
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
+                mostRecentNote = loopThroughArray(notesArray);
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -106,8 +96,51 @@ public class NoteWidget extends AppWidgetProvider {
         return mostRecentNote;
     }
 
+    /**
+     * Loops through JSONArray to retrieve the most recently modified Note
+     * @param notesArray Array of Notes in JSON Format
+     * @return mostRecentNote the most recently modified Note
+     * @throws JSONException Due to accessing JSON formats
+     */
+    public static Note loopThroughArray(JSONArray notesArray) throws JSONException {
+        Date mostRecentDate = null;
+        Note mostRecentNote = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        for (int i = 0; i < notesArray.length(); i++) {
+            JSONObject noteObject = notesArray.getJSONObject(i);
+            String timestampStr = noteObject.getString("timestamp");
+            try {
+                Date date = dateFormat.parse(timestampStr);
+                if (mostRecentDate == null || (date != null && date.after(mostRecentDate))) {
+                    mostRecentDate = date;
 
+                    UUID id = UUID.fromString(noteObject.getString("id"));
+                    String title = noteObject.getString("title");
+                    String author = noteObject.getString("author");
+                    String content = noteObject.getString("content");
+                    String timestamp = noteObject.getString("timestamp");
 
+                    mostRecentNote = new Note(id, title, author, content, Timestamp.valueOf(timestamp));
+                    return mostRecentNote;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return mostRecentNote;
+    }
+
+    /**
+     * Updates the Widget with possible changes
+     * @param context   The {@link android.content.Context Context} in which this receiver is
+     *                  running.
+     * @param appWidgetManager A {@link AppWidgetManager} object you can call {@link
+     *                  AppWidgetManager#updateAppWidget} on.
+     * @param appWidgetIds The appWidgetIds for which an update is needed.  Note that this
+     *                  may be all of the AppWidget instances for this provider, or just
+     *                  a subset of them.
+     *
+     */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
@@ -116,16 +149,31 @@ public class NoteWidget extends AppWidgetProvider {
         }
     }
 
+    /**
+     * Unimportant
+     * @param context   The {@link android.content.Context Context} in which this receiver is
+     *                  running.
+     */
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
     }
 
+    /**
+     * Unimportant
+     * @param context   The {@link android.content.Context Context} in which this receiver is
+     *                  running.
+     */
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
 
+    /**
+     * Receives Intents
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
