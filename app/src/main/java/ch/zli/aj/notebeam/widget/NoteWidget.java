@@ -1,5 +1,6 @@
 package ch.zli.aj.notebeam.widget;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -56,7 +57,7 @@ public class NoteWidget extends AppWidgetProvider {
     }
 
     public static Note getMostRecentNote(Context context) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         File file = new File(context.getFilesDir(), "notes.json");
         Note mostRecentNote = null; // Now initializing this below before use
         Date mostRecentDate = null;

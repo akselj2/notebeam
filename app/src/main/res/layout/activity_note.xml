@@ -32,7 +32,8 @@
         app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.173" />
+        app:layout_constraintVertical_bias="0.173"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/note_author"
@@ -46,7 +47,8 @@
         app:layout_constraintHorizontal_bias="0.316"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/note_title"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.082"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/textView2"
@@ -74,7 +76,8 @@
         app:layout_constraintHorizontal_bias="0.316"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/note_author"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.167"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/textView3"

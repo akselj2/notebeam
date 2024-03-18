@@ -24,11 +24,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +36,7 @@ import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
 
 /**
+ * Class for Main Menu
  * @author Aksel Jessen
  * @version 1.0
  * @since 18.03.2024
@@ -47,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
 
     private class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> implements OnNoteListener {
 
-        private OnNoteListener onNoteListener;
+        private final OnNoteListener onNoteListener;
 
-        private List<Note> noteList;
+        private final List<Note> noteList;
 
         /**
          * Constructor for NoteAdapter
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
          *
          * @return a new NoteViewHolder with the itemView as a parameter
          */
+        @NonNull
         @Override
         public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -85,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
         @Override
         public void onBindViewHolder(NoteViewHolder holder, int position) {
             Note note = noteList.get(position);
-            holder.itemView.setOnClickListener(view -> {
-                onNoteClick(note);
-            });
+            holder.itemView.setOnClickListener(view ->
+                onNoteClick(note)
+            );
             holder.titleView.setText(note.title);
             holder.contentView.setText(note.content);
         }
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
 
 
         private class NoteViewHolder extends RecyclerView.ViewHolder {
-            TextView titleView, contentView;
+            final TextView titleView, contentView;
 
             /**
              * Constructor for NoteViewHolder class
@@ -128,20 +127,17 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
                 super(itemView);
                 titleView = itemView.findViewById(android.R.id.text1);
                 contentView = itemView.findViewById(android.R.id.text2);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION && onNoteListener != null) {
-                            onNoteListener.onNoteClick(noteList.get(position));
-                        }
+                itemView.setOnClickListener(v -> {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && onNoteListener != null) {
+                        onNoteListener.onNoteClick(noteList.get(position));
                     }
                 });
             }
         }
     }
 
-    public FloatingActionButton menuButton, scanButton, createButton;
+    public FloatingActionButton scanButton, createButton;
     private boolean areButtonsVisible;
     public RecyclerView recyclerView;
 
@@ -163,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
             return insets;
         });
 
-        menuButton = findViewById(R.id.menuButton);
         scanButton = findViewById(R.id.actionButton1);
         createButton = findViewById(R.id.actionButton2);
 
