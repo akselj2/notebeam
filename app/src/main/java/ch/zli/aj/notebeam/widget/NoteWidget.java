@@ -1,5 +1,6 @@
 package ch.zli.aj.notebeam.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import ch.zli.aj.notebeam.R;
+import ch.zli.aj.notebeam.activity.MainActivity;
 import ch.zli.aj.notebeam.model.Note;
 
 /**
@@ -35,12 +37,18 @@ public class NoteWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+
         Note note = getMostRecentNote(context);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.note_widget);
         views.setTextViewText(R.id.appwidget_title, note.title);
         views.setTextViewText(R.id.appwidget_content, note.content);
         views.setTextViewText(R.id.appwidget_timestamp, note.timestamp.toString());
+
+        views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
