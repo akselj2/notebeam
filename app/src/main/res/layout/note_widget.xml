@@ -2,18 +2,41 @@
     style="@style/Widget.Notebeam.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     android:theme="@style/Theme.Notebeam.AppWidgetContainer">
 
     <TextView
-        android:id="@+id/appwidget_text"
+        android:id="@+id/appwidget_title"
         style="@style/Widget.Notebeam.AppWidget.InnerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
+        android:text="Title"
         android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/appwidget_content"
+        style="@style/Widget.Notebeam.AppWidget.InnerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appwidget_title"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="Content"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/appwidget_timestamp"
+        style="@style/Widget.Notebeam.AppWidget.InnerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appwidget_content"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="Timestamp"
+        android:textSize="16sp" />
+
 </RelativeLayout>

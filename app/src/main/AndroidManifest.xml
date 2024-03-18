@@ -40,10 +40,10 @@
         </activity>
         <activity
             android:name=".activity.NoteActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activity.QRActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

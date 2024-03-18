@@ -46,6 +46,7 @@ import java.util.UUID;
 
 import ch.zli.aj.notebeam.R;
 import ch.zli.aj.notebeam.model.Note;
+import ch.zli.aj.notebeam.widget.NoteWidget;
 import kotlinx.coroutines.JobKt;
 
 public class NoteActivity extends AppCompatActivity {
@@ -110,6 +111,7 @@ public class NoteActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        updateWidget(this);
     }
 
     public void delete(View view) {
@@ -145,6 +147,7 @@ public class NoteActivity extends AppCompatActivity {
         finish();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        updateWidget(this);
     }
 
     public void share(View view) {
@@ -272,4 +275,11 @@ public class NoteActivity extends AppCompatActivity {
 
         return "";
     }
+
+    public void updateWidget(Context context) {
+        Intent intent = new Intent(context, NoteWidget.class);
+        intent.setAction(NoteWidget.ACTION_UPDATE_NOTE_WIDGET);
+        context.sendBroadcast(intent);
+    }
+
 }
