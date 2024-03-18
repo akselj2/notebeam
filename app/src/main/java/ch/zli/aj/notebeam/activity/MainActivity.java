@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
     }
 
     public void populateView() {
-
         recyclerView = findViewById(R.id.recyclerView);
 
         List<Note> notesList = getJsonFile();

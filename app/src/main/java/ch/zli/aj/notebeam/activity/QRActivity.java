@@ -18,9 +18,22 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import ch.zli.aj.notebeam.R;
 
 public class QRActivity extends AppCompatActivity {
+
+    private static final String FILE_NAME = "notes.json";
     private static final int PERMISSION_REQUEST_CAMERA = 1;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +81,48 @@ public class QRActivity extends AppCompatActivity {
                 Toast.makeText(this, "Scan cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+
+                try {
+                    JSONObject object = new JSONObject(result.getContents());
+                    saveNoteToFile(object);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+    public void saveNoteToFile(JSONObject note) {
+        File file = new File(this.getFilesDir(), FILE_NAME);
+        JSONArray notesArray = new JSONArray();
+
+        // Read existing notes
+        if (file.exists()) {
+            StringBuilder jsonContent = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+                notesArray = new JSONArray(jsonContent.toString());
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Add the new note to the JSONArray
+        notesArray.put(note);
+
+        // Write the updated notes back to the file
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+            bufferedWriter.write(notesArray.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

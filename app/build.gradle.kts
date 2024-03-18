@@ -41,5 +41,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.journeyapps:zxing-android-embedded:4.1.0")
-    implementation("com.google.zxing:core:3.3.3")
+    implementation("com.google.zxing:core:3.5.3")
+    implementation("com.google.zxing:zxing-parent:3.5.3")
+    implementation("com.google.zxing:javase:3.5.3")
 }
