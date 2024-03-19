@@ -4,8 +4,8 @@ Notes app with QR Code sharing, persistent note storage, and a recent note widge
 
 ## Differences to planning
 
-More classes implemented than planned for. (NoteWidget.java & 2 Classes regarding the recyclerView in MainActivity.java)
-Forgot to implement tags until the last second.
+- More classes implemented than planned for. (NoteWidget.java & 2 Classes regarding the recyclerView in MainActivity.java)
+- Forgot to implement tags until the last second.
 
 ## Linter
 
