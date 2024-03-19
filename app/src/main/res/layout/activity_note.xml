@@ -36,7 +36,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/note_author"
+        android:id="@+id/note_tag"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:ems="10"
@@ -54,7 +54,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author"
+        android:text="Tag"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.316"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/note_author"
+        app:layout_constraintTop_toBottomOf="@+id/note_tag"
         app:layout_constraintVertical_bias="0.167"
         android:autofillHints="" />
 

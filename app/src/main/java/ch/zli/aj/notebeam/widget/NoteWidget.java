@@ -115,11 +115,11 @@ public class NoteWidget extends AppWidgetProvider {
 
                     UUID id = UUID.fromString(noteObject.getString("id"));
                     String title = noteObject.getString("title");
-                    String author = noteObject.getString("author");
+                    String tag = noteObject.getString("tag");
                     String content = noteObject.getString("content");
                     String timestamp = noteObject.getString("timestamp");
 
-                    mostRecentNote = new Note(id, title, author, content, Timestamp.valueOf(timestamp));
+                    mostRecentNote = new Note(id, title, tag, content, Timestamp.valueOf(timestamp));
                     return mostRecentNote;
                 }
             } catch (ParseException e) {

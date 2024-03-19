@@ -78,7 +78,7 @@ public class NoteActivity extends AppCompatActivity {
         save = findViewById(R.id.save);
         share = findViewById(R.id.share);
         title = findViewById(R.id.note_title);
-        tag = findViewById(R.id.note_author);
+        tag = findViewById(R.id.note_tag);
         content = findViewById(R.id.note_content);
         /*
          * Checks whether there is an Intent, to decide if it's an existing Note or a new Note.
@@ -89,7 +89,7 @@ public class NoteActivity extends AppCompatActivity {
             if (idString != null && !idString.isEmpty()) {
                 noteId = UUID.fromString(idString);
                 title.setText(intent.getStringExtra("title"));
-                tag.setText(intent.getStringExtra("author"));
+                tag.setText(intent.getStringExtra("tag"));
                 content.setText(intent.getStringExtra("content"));
             }
         }
@@ -169,7 +169,7 @@ public class NoteActivity extends AppCompatActivity {
         try {
             object.put("id", noteId.toString());
             object.put("title", title.getText().toString());
-            object.put("author", tag.getText().toString());
+            object.put("tag", tag.getText().toString());
             object.put("content", content.getText().toString());
             object.put("timestamp", new Timestamp(System.currentTimeMillis()));
         } catch (JSONException e) {
