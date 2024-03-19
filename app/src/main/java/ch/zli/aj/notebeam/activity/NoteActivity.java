@@ -54,7 +54,7 @@ public class NoteActivity extends AppCompatActivity {
 
     public static final String FILE_NAME = "notes.json";
 
-    public EditText title, author, content;
+    public EditText title, tag, content;
 
     public UUID noteId = null;
 
@@ -77,11 +77,9 @@ public class NoteActivity extends AppCompatActivity {
         delete = findViewById(R.id.delete);
         save = findViewById(R.id.save);
         share = findViewById(R.id.share);
-
         title = findViewById(R.id.note_title);
-        author = findViewById(R.id.note_author);
+        tag = findViewById(R.id.note_author);
         content = findViewById(R.id.note_content);
-
         /*
          * Checks whether there is an Intent, to decide if it's an existing Note or a new Note.
          */
@@ -91,12 +89,10 @@ public class NoteActivity extends AppCompatActivity {
             if (idString != null && !idString.isEmpty()) {
                 noteId = UUID.fromString(idString);
                 title.setText(intent.getStringExtra("title"));
-                author.setText(intent.getStringExtra("author"));
+                tag.setText(intent.getStringExtra("author"));
                 content.setText(intent.getStringExtra("content"));
             }
         }
-
-
     }
 
     /**
@@ -113,7 +109,7 @@ public class NoteActivity extends AppCompatActivity {
      */
     public void save(View view) {
         String noteTitle = title.getText().toString();
-        String noteAuthor = author.getText().toString();
+        String noteTag = tag.getText().toString();
         String noteContent = content.getText().toString();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -121,7 +117,7 @@ public class NoteActivity extends AppCompatActivity {
             noteId = generateId();
         }
 
-        Note note = new Note(noteId, noteTitle, noteAuthor, noteContent, timestamp);
+        Note note = new Note(noteId, noteTitle, noteTag, noteContent, timestamp);
 
         saveNotePersistently(note);
         //Intent returns to main menu and updates the Widget.
@@ -173,7 +169,7 @@ public class NoteActivity extends AppCompatActivity {
         try {
             object.put("id", noteId.toString());
             object.put("title", title.getText().toString());
-            object.put("author", author.getText().toString());
+            object.put("author", tag.getText().toString());
             object.put("content", content.getText().toString());
             object.put("timestamp", new Timestamp(System.currentTimeMillis()));
         } catch (JSONException e) {
@@ -266,7 +262,7 @@ public class NoteActivity extends AppCompatActivity {
                 JSONObject existingNotes = notesArray.getJSONObject(i);
                 if (existingNotes.getString("id").equals(note.id.toString())) { //fills data if ID matches.
                     existingNotes.put("title", note.title);
-                    existingNotes.put("author", note.author);
+                    existingNotes.put("tag", note.tag);
                     existingNotes.put("content", note.content);
                     existingNotes.put("timestamp", note.timestamp);
                     notesArray.put(i, existingNotes);
@@ -295,7 +291,7 @@ public class NoteActivity extends AppCompatActivity {
         try {
             jsonObject.put("id", note.id);
             jsonObject.put("title", note.title);
-            jsonObject.put("author", note.author);
+            jsonObject.put("tag", note.tag);
             jsonObject.put("content", note.content);
             jsonObject.put("timestamp", note.timestamp);
 

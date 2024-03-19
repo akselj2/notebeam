@@ -30,10 +30,23 @@ import java.io.IOException;
 
 import ch.zli.aj.notebeam.R;
 
+/**
+ * @author Aksel Jessen
+ * @version 1.0
+ * @since 18.03.2024
+ */
 public class QRActivity extends AppCompatActivity {
 
     private static final String FILE_NAME = "notes.json";
     private static final int PERMISSION_REQUEST_CAMERA = 1;
+
+    /**
+     * UI Generation method
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -51,14 +64,27 @@ public class QRActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prepares and initiaties the QR Code scan
+     */
     private void scanQrCode() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setOrientationLocked(true);
+        integrator.setOrientationLocked(false);
         integrator.setPrompt("Scan a QR Code");
         integrator.initiateScan();
     }
 
+    /**
+     * Checks if permissions were granted or not. Based on that, it'll either execute scanQrCode() or respond with "Camera permission is required"
+     * @param requestCode The request code passed in {@link #requestPermissions(
+     * android.app.Activity, String[], int)}
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     *
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -72,6 +98,17 @@ public class QRActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Waits until a QR Code has been scanned if a Result was returned.
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -94,6 +131,11 @@ public class QRActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    /**
+     *
+     * @param note Note object
+     */
     public void saveNoteToFile(JSONObject note) {
         File file = new File(this.getFilesDir(), FILE_NAME);
         JSONArray notesArray = new JSONArray();

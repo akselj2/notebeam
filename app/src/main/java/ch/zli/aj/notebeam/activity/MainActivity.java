@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
             Intent intent = new Intent(MainActivity.this, NoteActivity.class);
             intent.putExtra("id", note.id.toString());
             intent.putExtra("title", note.title);
-            intent.putExtra("author", note.author);
+            intent.putExtra("tag", note.tag);
             intent.putExtra("content", note.content);
             intent.putExtra("timestamp", note.timestamp);
             startActivity(intent);
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
                     Note note = new Note(
                             UUID.fromString(jsonObject.getString("id")),
                             jsonObject.getString("title"),
-                            jsonObject.getString("author"),
+                            jsonObject.getString("tag"),
                             jsonObject.getString("content"),
                             Timestamp.valueOf(jsonObject.getString("timestamp"))
                     );
@@ -253,13 +253,5 @@ public class MainActivity extends AppCompatActivity implements OnNoteListener {
      */
     @Override
     public void onNoteClick(Note note) {
-        /*Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-        intent.putExtra("id", note.id);
-        intent.putExtra("title", note.title);
-        intent.putExtra("author", note.author);
-        intent.putExtra("content", note.content);
-        intent.putExtra("timestamp", note.timestamp);
-        startActivity(intent);*/
     }
-
 }

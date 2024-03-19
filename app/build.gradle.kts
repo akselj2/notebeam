@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    id("checkstyle")
 }
+
+
 
 android {
     namespace = "ch.zli.aj.notebeam"
@@ -15,6 +18,27 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    val checkstyle by tasks.registering(Checkstyle::class) {
+        configFile = rootProject.file("app/config/checkstyle/checkstyle.xml")
+        source("src/main/java")
+        include("**/*.java")
+        exclude("**/gen/**")
+        classpath = files()
+    }
+
+    tasks.named("check") {
+        dependsOn(checkstyle)
+    }
+
+    tasks.withType<Checkstyle>().configureEach {
+        reports {
+            xml.required = true
+            html.required = true
+        }
+        classpath = files()
+    }
+
 
     buildTypes {
         release {

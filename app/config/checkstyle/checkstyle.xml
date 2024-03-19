@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name = "Checker">
+    <property name="charset" value="UTF-8"/>
+    <module name="TreeWalker">
+        <!-- Method length -->
+        <module name="MethodLength">
+            <property name="max" value="30"/>
+        </module>
+
+        <!-- Class names should use PascalCase -->
+        <module name="TypeName">
+            <message key="name.invalidPattern"
+                value="Class name ''{0}'' must match pattern ''^[A-Z][a-zA-Z0-9]*$''"/>
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- Method names should use camelCase -->
+        <module name="MethodName">
+            <message key="name.invalidPattern"
+                value="Method name ''{0}'' must match pattern ''^[a-z][a-zA-Z0-9]*$''"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- Variable names should use camelCase -->
+        <module name="LocalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- Member names (fields) should use camelCase -->
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+    </module>
+</module>
