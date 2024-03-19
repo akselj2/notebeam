@@ -14,4 +14,6 @@ run ```./gradlew check``` to check for the following conventions:
 2. PascalCase for public properties (class names in this case) & camelCase for methods and variables
 3. If english is used, but Checkstyle can't do language analysis.
 
+## notes.json file location in Emulator
 
+Can be found under: ```/data/data/ch.zli.aj.notebeam/files/notes.json```
